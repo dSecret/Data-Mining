@@ -15,6 +15,7 @@ X = dataset.iloc[:,[7,8,9,12,13]].values
 # Attributes Used: Total
 y = dataset.iloc[:, 14].values
 
+print(X[0])
 
 
 # Splitting into Training and Testing
@@ -49,6 +50,7 @@ new_prediction = lin.predict(sc.transform(np.array([[103,0,13,50,50]])))
 print("Prediction score:" , new_prediction)
 
 
+import pickle
 
 
 # save the model to disk

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Data Mining Project</title>
+</head>
+
+<body>
+
+  <h1 style="color: teal">Fill out details</h1>
+  <div id="form-cont">
+  	<label>Runs</label>
+  	<input name="runs" type="text" placeholder="Runs" />
+  	<label>Wickets</label>
+  	<input name="wickets" type="text" placeholder="Wickets" />
+  	<label>Overs</label>
+  	<input name="overs" type="text" placeholder="Overs" />
+  	<label>Striker</label>
+  	<input name="striker" type="text" placeholder="Striker" />
+  	<label>Non-striker</label>
+  	<input name="non-striker" type="text" placeholder="Non-striker" />
+
+  	<button onclick="handleFormSubmit()"> Submit </button>
+  </div>
+  <input type="text"  id="total"/>
+
+  <script type="text/javascript">
+  	function handleFormSubmit(argument) {
+  		
+  		var data = {}
+
+  		var d = document.getElementById('form-cont')
+
+  		// inputElems is array of ref to each input field
+		var inputElems = d.querySelectorAll('input')  		
+
+		inputElems.forEach( e => {
+			data[e.name] = e.value
+		})
+
+		// console.log(data)
+
+		fetch('/predict', {
+		  method: 'POST', // or 'PUT'
+		  headers: {
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(data),
+		})
+		.then((response) => response.json())
+		.then((data) => {
+		  console.log('Success:', data);
+		  var resultBox = document.getElementById('total')
+
+		  resultBox.value = data.result
+		  // resultBox.innerHTML = data.result
+		  // resultBox.style.color = 'black'
+			
+		  // d.appendChild(resultBox)		
+		})
+		.catch((error) => {
+		  console.error('Error:', error);
+		});
+  	}
+  </script>
+</body>
+
+</html>

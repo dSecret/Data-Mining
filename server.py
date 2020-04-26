@@ -1,22 +1,26 @@
-import os.path
+from flask import Flask, render_template, jsonify, request
+import pickle, pandas
 
-from flask import Flask, Response
+app = Flask(__name__, static_url_path='')
+
+@app.route('/', methods=['GET'])
+def mainpage():
+    return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+	content = request.json
+
+	filename = 'finalized_model.sav'
+	# load the model from disk
+	loaded_model = pickle.load(open(filename, 'rb'))
 
 
-# To load the saved module
-import pickle
+	for fieldname in content:
+		content[fieldname] = [content[fieldname]]
 
-app = Flask(__name__, instance_relative_config=False)
-app.config.from_object('config.Config')
+	X_input = pandas.DataFrame(content)
 
+	result = loaded_model.predict(X_input)
 
-@app.route('/', methods=('GET'))
-def hompage():
-  content = get_file('jenkins_analytics.html')
-  return Response(content, mimetype="text/html")
-  
-@app.route('/predict', methods=('POST'))
-def contact():
-  # load the model from disk
-  loaded_model = pickle.load(open(filename, 'rb'))
-  result = loaded_model.score(X_test, Y_test)
+	return jsonify(result= result[0])
